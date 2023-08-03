@@ -18,7 +18,7 @@ use App\Http\Controllers\Personas;
 Route::group(['middleware' => ["auth:sanctum"]], function () {
     Route::get('/auth/lista/provincias',[AuthController::class,'listaProvincias']);
     Route::get('/auth/lista/cantones',[AuthController::class,'Lista_cantones_provincias']);
-    
+    Route::get('/auth/lista/recintos',[AuthController::class,'Lista_recintos']);
 });
 
 Route::post('/auth/register', [AuthController::class, 'createUser']);

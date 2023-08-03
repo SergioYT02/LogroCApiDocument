@@ -119,5 +119,16 @@ public function Lista_cantones_provincias(){
 
 }
 
+public function Lista_recintos(){
+    $provincias_Cantones_Recintos = DB::table('provincias')
+    ->join('cantones', 'provincias.id', '=', 'cantones.provincia_id')
+    ->join('parroquias', 'cantones.id', '=', 'parroquias.canton_id')
+    ->join('recintoselectorales', 'parroquias.id', '=', 'recintoselectorales.parroquia_id')
+    ->select('recintoselectorales.recinto', 'cantones.canton','provincias.provincia' )
+    ->get();
+    return response()->json([
+        "Listado"=> $provincias_Cantones_Recintos,
+    ]);
+}
 
 }
