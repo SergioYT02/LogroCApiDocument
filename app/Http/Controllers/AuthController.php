@@ -6,9 +6,11 @@ use App\Models\User;
 use App\Models\Persona;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\RecintoElectoral;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+
 
 class AuthController extends Controller
 {
@@ -131,4 +133,31 @@ public function Lista_recintos(){
     ]);
 }
 
+
+ public function updateRecintosElectorales(Request $request, $id){
+ // Validar los datos enviados desde el formulario
+ $request->validate([
+    'recinto' => 'required|string',
+    'parroquia_id' => 'required', 
+]);
+
+// Buscar el registro electoral por su ID
+$recinto = RecintoElectoral::find($id);
+
+if ($recinto->estado==false) {
+    return response()->json(['message' => 'Registro electoral no encontrado'], 404);
+}
+
+$recinto->update([
+    'recinto' => $request->input('recinto'),
+    'parroquia_id' => $request->input('parroquia_id'),
+
+]);
+  
+
+
+return response()->json(['message' => 'Registro electoral actualizado correctamente']);
+
+
+ }
 }

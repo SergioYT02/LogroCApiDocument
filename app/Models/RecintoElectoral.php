@@ -14,4 +14,8 @@ class RecintoElectoral extends Model
      protected $fillable = [
         'recinto','parroquia_id','estado'
     ];
+    public function parroquia()
+    {
+        return $this->belongsTo(Parroquia::class, 'parroquia_id');
+    }
 }
