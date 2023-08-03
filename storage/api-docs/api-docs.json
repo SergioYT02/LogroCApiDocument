@@ -233,6 +233,60 @@
                     }
                 }
             }
+        },
+        "/api/auth/lista/cantones": {
+            "get": {
+                "summary": "Obtener lista de cantones y provincias",
+                "description": "Este endpoint se utiliza para obtener una lista de cantones y provincias disponibles en la aplicación.",
+                "operationId": "Lista_cantones_provincias",
+                "responses": {
+                    "200": {
+                        "description": "Lista de cantones y provincias obtenida exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Listado": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "canton": {
+                                                        "type": "string"
+                                                    },
+                                                    "provincia": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error del servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
