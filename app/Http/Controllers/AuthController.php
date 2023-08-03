@@ -108,6 +108,16 @@ public function listaProvincias()
 
 }
 
+public function Lista_cantones_provincias(){
+    $provincias_Cantones = DB::table('provincias')
+    ->join('cantones', 'provincias.id', '=', 'cantones.provincia_id')
+    ->select( 'cantones.canton','provincias.provincia')
+    ->get();
+    return response()->json([
+        "Listado"=> $provincias_Cantones,
+    ]);
+
+}
 
 
 }
