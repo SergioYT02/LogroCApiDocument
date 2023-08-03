@@ -294,7 +294,7 @@ public function Lista_cantones_provincias(){
 
 /**
  * @OA\Get(
- *     path="/api/lista_recintos",
+ *     path="/api/auth/lista/recintos",
  *     summary="Obtener lista de recintos electorales",
  *     description="Este endpoint se utiliza para obtener una lista de recintos electorales disponibles en la aplicación.",
  *     operationId="Lista_recintos",
@@ -334,61 +334,7 @@ public function Lista_recintos(){
     ]);
 }
 
-/**
- * @OA\Put(
- *     path="/api/update-recintos-electorales/{id}",
- *     summary="Actualizar registro electoral",
- *     description="Este endpoint se utiliza para actualizar la información de un registro electoral existente en la aplicación.",
- *     operationId="updateRecintosElectorales",
- *     @OA\Parameter(
- *         name="id",
- *         in="path",
- *         description="ID del registro electoral a actualizar",
- *         required=true,
- *         @OA\Schema(
- *             type="integer",
- *             format="int64"
- *         )
- *     ),
- *     @OA\RequestBody(
- *         required=true,
- *         @OA\JsonContent(ref="#/components/schemas/UpdateRecintoElectoralRequest")
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Registro electoral actualizado exitosamente",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="message", type="string", example="Registro electoral actualizado exitosamente")
- *         )
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="Registro electoral no encontrado",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="message", type="string", example="Registro electoral no encontrado")
- *         )
- *     ),
- *     @OA\Response(
- *         response=422,
- *         description="Error de validación",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="message", type="string", example="Los datos enviados no son válidos"),
- *             @OA\Property(property="errors", type="object")
- *         )
- *     ),
- *     @OA\Response(
- *         response=500,
- *         description="Error del servidor",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="message", type="string")
- *         )
- *     )
- * )
- */
+
  public function updateRecintosElectorales(Request $request, $id){
  // Validar los datos enviados desde el formulario
  $request->validate([

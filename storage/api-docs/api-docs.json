@@ -287,6 +287,63 @@
                     }
                 }
             }
+        },
+        "/api/lista_recintos": {
+            "get": {
+                "summary": "Obtener lista de recintos electorales",
+                "description": "Este endpoint se utiliza para obtener una lista de recintos electorales disponibles en la aplicación.",
+                "operationId": "Lista_recintos",
+                "responses": {
+                    "200": {
+                        "description": "Lista de recintos electorales obtenida exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Listado": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "recinto": {
+                                                        "type": "string"
+                                                    },
+                                                    "canton": {
+                                                        "type": "string"
+                                                    },
+                                                    "provincia": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error del servidor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
