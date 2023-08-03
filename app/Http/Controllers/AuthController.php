@@ -3,17 +3,89 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
-use App\Models\Persona;
+
+use App\Models\Canton;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\RecintoElectoral;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+/**
+ * @OA\Info(
+ *    title="API Prueba",
+ *    version="1.0.0",
+ * ),
+ *   @OA\SecurityScheme(
+ *       securityScheme="bearerAuth",
+ *       in="header",
+ *       name="bearerAuth",
+ *       type="http",
+ *       scheme="bearer",
+ *       bearerFormat="JWT",
+ *    ),
+ */
+/**
+ * @OA\Schema(
+ *     schema="CreateUserRequest",
+ *     required={"name", "email", "password"},
+ *     @OA\Property(property="name", type="string"),
+ *     @OA\Property(property="email", type="string", format="email"),
+ *     @OA\Property(property="password", type="string"),
+ * )
+ */
+/**
+ * @OA\Schema(
+ *     schema="LoginUserRequest",
+ *     required={"email", "password"},
+ *     @OA\Property(property="email", type="string", format="email"),
+ *     @OA\Property(property="password", type="string"),
+ * )
+ */
 
 class AuthController extends Controller
 {
+     /**
+ *  @OA\Post(
+ *     path="/api/auth/register",
+ *     summary="Crear un nuevo usuario",
+ *     description="Este endpoint se utiliza para crear un nuevo usuario junto con su información de persona asociada en la aplicación.",
+ *     operationId="createUser",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(ref="#/components/schemas/CreateUserRequest")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Usuario creado exitosamente",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="User Created Successfully"),
+ *             @OA\Property(property="token", type="string", example="API TOKEN")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Campos vacíos o inválidos",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Existen campos vacios"),
+ *             @OA\Property(property="errors", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Error del servidor",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string")
+ *         )
+ *     )
+ * )
+ */
     public function createUser(Request $request)
     {
         try {
@@ -52,7 +124,48 @@ class AuthController extends Controller
             ], 500);
         }
     }
-
+/**
+ * @OA\Post(
+ *     path="/api/auth/login",
+ *     summary="Iniciar sesión de usuario",
+ *     description="Este endpoint se utiliza para permitir a un usuario iniciar sesión en la aplicación.",
+ *     operationId="loginUser",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(ref="#/components/schemas/LoginUserRequest")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Usuario ha iniciado sesión exitosamente",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="User Logged In Successfully"),
+ *             @OA\Property(property="token", type="string", example="API TOKEN")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Error de validación o Email y contraseña no coinciden con nuestros registros",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(property="errors", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Error del servidor",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string")
+ *         )
+ *     )
+ * )
+ */
+    
     public function loginUser(Request $request)
     {
         try {
@@ -102,6 +215,7 @@ public function listaProvincias()
     ->join('parroquias', 'cantones.id', '=', 'parroquias.canton_id')
     ->join('recintoselectorales', 'parroquias.id', '=', 'recintoselectorales.parroquia_id')
     ->select('provincias.provincia', 'cantones.canton', 'parroquias.parroquia', 'recintoselectorales.recinto')
+    ->where('provincias.estado',true)
     ->get();
     return response()->json([
         "Listado"=> $provincias_Info,
@@ -114,6 +228,7 @@ public function Lista_cantones_provincias(){
     $provincias_Cantones = DB::table('provincias')
     ->join('cantones', 'provincias.id', '=', 'cantones.provincia_id')
     ->select( 'cantones.canton','provincias.provincia')
+    ->where('cantones.estado',true)
     ->get();
     return response()->json([
         "Listado"=> $provincias_Cantones,
@@ -127,6 +242,7 @@ public function Lista_recintos(){
     ->join('parroquias', 'cantones.id', '=', 'parroquias.canton_id')
     ->join('recintoselectorales', 'parroquias.id', '=', 'recintoselectorales.parroquia_id')
     ->select('recintoselectorales.recinto', 'cantones.canton','provincias.provincia' )
+    ->where('recintoselectorales.estado',true)
     ->get();
     return response()->json([
         "Listado"=> $provincias_Cantones_Recintos,
@@ -160,4 +276,27 @@ return response()->json(['message' => 'Registro electoral actualizado correctame
 
 
  }
+ public function DeleteP(Request $request, $id)
+{
+    // Buscar el cantón por su ID
+    $canton = Canton::find($id);
+
+    // Verificar si el cantón existe
+    if ($canton->estado==false) {
+        return response()->json(['message' => 'Cantón no encontrado'], 404);
+    }
+
+    // Obtener las parroquias asociadas al cantón
+    $parroquias = $canton->parroquias;
+
+    // Eliminar cada parroquia asociada al cantón
+    foreach ($parroquias as $parroquia) {
+        $parroquias->estado=false;
+        $parroquias->save();
+        
+    }
+
+    // Devolver una respuesta de éxito
+    return response()->json(['message' => 'Parroquias eliminadas correctamente'],200);
+}
 }
