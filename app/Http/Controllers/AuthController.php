@@ -206,7 +206,36 @@ class AuthController extends Controller
         }
     }
 
-
+/**
+ * @OA\Get(
+ *     path="/api/auth/lista/provincias",
+ *     summary="Obtener lista de provincias",
+ *     description="Este endpoint se utiliza para obtener una lista de provincias con información adicional de cantones, parroquias y recintos electorales.",
+ *     operationId="listaProvincias",
+ *     @OA\Response(
+ *         response=200,
+ *         description="Lista de provincias obtenida exitosamente",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="Listado", type="array", @OA\Items(
+ *                 @OA\Property(property="provincia", type="string"),
+ *                 @OA\Property(property="canton", type="string"),
+ *                 @OA\Property(property="parroquia", type="string"),
+ *                 @OA\Property(property="recinto", type="string")
+ *             ))
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Error del servidor",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string")
+ *         )
+ *     )
+ * )
+ */
 
 public function listaProvincias()
 {
@@ -223,7 +252,34 @@ public function listaProvincias()
 
 
 }
-
+/**
+ * @OA\Get(
+ *     path="/api/auth/lista/cantones",
+ *     summary="Obtener lista de cantones y provincias",
+ *     description="Este endpoint se utiliza para obtener una lista de cantones y provincias disponibles en la aplicación.",
+ *     operationId="Lista_cantones_provincias",
+ *     @OA\Response(
+ *         response=200,
+ *         description="Lista de cantones y provincias obtenida exitosamente",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="Listado", type="array", @OA\Items(
+ *                 @OA\Property(property="canton", type="string"),
+ *                 @OA\Property(property="provincia", type="string")
+ *             ))
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Error del servidor",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="status", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string")
+ *         )
+ *     )
+ * )
+ */
 public function Lista_cantones_provincias(){
     $provincias_Cantones = DB::table('provincias')
     ->join('cantones', 'provincias.id', '=', 'cantones.provincia_id')
